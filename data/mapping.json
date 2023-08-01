@@ -1,5 +1,5 @@
 {
-  "required_columnss": {
+  "required_columns": {
     "Ailment ICD Code": "AilmentICDCode",
     "Insurer": "Insurer",
     "Policy Start Date": "PolicyStartDate",
@@ -17,19 +17,29 @@
     "Location": "Location",
     "Claimed Amount": "ClaimedAmount",
     "Incurred Amount": "IncurredAmount",
+    "Hospital": "Hospital"
+  },
+  "extra_cols": {
     "Procedure Type": "ProcedureType"
   },
   "gender": {
-    "male": "M",
-    "female": "F"
+    "male": "Male",
+    "female": "Female",
+    "m": "Male",
+    "f": "Female"
   },
   "relation": {
     "employee": "Self",
-    "son": "Children",
+    "member": "Self",
+    "self": "Self",
     "wife": "Spouse",
     "husband": "Spouse",
+    "spouse": "Spouse",
+    "son": "Children",
     "daughter": "Children",
-    "member": "Self"
+    "mother": "Parent",
+    "father": "Parent",
+    "parent": "Parent"
   },
   "claim_type": {
     "cashless": "cashless",
@@ -47,13 +57,11 @@
     "settled": "settled",
     "claim settled": "settled",
     "cashless settled": "settled",
-    "settled": "settled",
     "paid": "settled",
-    "paid": "settled",
+    "claim paid": "settled",
     "paid/settled*": "settled",
     "reimbursement settled": "settled",
     "claim closed": "closed",
-    "closed": "closed",
     "closed": "closed",
     "repudiated/closed": "closed",
     "processed - processing payment": "under_process",
@@ -63,7 +71,6 @@
     "claim investigation": "under_process",
     "al - on hold for additional information": "under_process",
     "al issued": "under_process",
-    "approved": "under_process",
     "approved": "under_process",
     "approved for payment": "under_process",
     "audit": "under_process",
@@ -111,7 +118,6 @@
     "reimbursement in process": "under_process",
     "reimbursement in query": "under_process",
     "shortfall": "under_process",
-    "shortfall": "under_process",
     "under claims scrutiny": "under_process",
     "under process": "under_process",
     "under review": "under_process",
@@ -129,12 +135,10 @@
     "outstanding": "under_process",
     "claim non payable": "denied",
     "denied letter sent": "denied",
-    "denied": "denied",
     "denied cashless": "denied",
     "denial": "denied",
     "denial review awaited": "denied",
     "denied": "denied",
-    "rejected": "denied",
     "rejected": "denied",
     "repudiated": "denied",
     "repudiated - awaiting insurer concurrence": "denied",

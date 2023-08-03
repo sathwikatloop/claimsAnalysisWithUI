@@ -80,7 +80,6 @@ def upload_file_form():
                         df = pd.read_excel(uploaded_file,
                                            header=0,
                                            sheet_name=sheet)
-                        st.write('File Contents', df)
                         return df, file_name
     except Exception as e:
         tb.format_exc()
@@ -141,7 +140,7 @@ def rename_cols_using_map(df, col_mapping):
 
 
 def save_file(df, file_name):
-    save_standardised_data = Path()
+    save_standardised_data = False
     try:
         data_dir = Path(appdirs.user_data_dir())
         save_standardised_data = data_dir / f"{file_name}_Standardised.xlsx"
@@ -149,9 +148,10 @@ def save_file(df, file_name):
             os.remove(save_standardised_data)
         df.to_excel(save_standardised_data, index=False)
         st.session_state['file_location'] = save_standardised_data
+        return save_standardised_data
     except Exception as e:
         print(tb.format_exc())
-    return save_standardised_data
+    return False
 
 
 def set_stage(i):
@@ -476,43 +476,4 @@ def show_maternity_claims(maternity_claims, data_df):
         xaxis_title="IncurredAmount",
         yaxis_title="Density",
     )
-
-    # Plot the normal distribution of 'IncurredAmount'
-    # # Compute the histogram using numpy
-    # hist_values, bin_edges = np.histogram(maternity_claims['IncurredAmount'], bins=30)
-    #
-    # # Calculate the mean of IncurredAmount
-    # mean_incurred_amount = maternity_claims['IncurredAmount'].mean()
-    #
-    # #  Create a line chart for the histogram using Plotly
-    # fig = go.Figure(go.Scatter(x=bin_edges[1:], y=hist_values, mode='lines'))
-    #
-    # # Add a vertical line for the mean
-    # mean_incurred_amount = maternity_claims['IncurredAmount'].mean()
-    # fig.add_shape(
-    #     go.layout.Shape(
-    #         type='line',
-    #         x0=mean_incurred_amount,
-    #         x1=mean_incurred_amount,
-    #         y0=0,
-    #         y1=max(hist_values),
-    #         line=dict(color='red', width=2)
-    #     )
-    # )
-    # # Update the layout
-    # fig.update_layout(
-    #     title='Frequency Distribution of Incurred Amount for Maternity Claims',
-    #     xaxis_title='Incurred Amount',
-    #     yaxis_title='Frequency',
-    #     showlegend=False
-    # )
-    # Display the plot
     st.plotly_chart(fig)
-    # st.dataframe(maternity_claims.sort_values(by='IncurredAmount',
-    #                                           ascending=False))
-    # st.write(f'Average amount incurred for a maternity claim')
-    # mat_claim_amt = ff.create_distplot([maternity_claims],
-    #                                    curve_type='normal',
-    #                                    group_labels=['Value of Maternity Claims'])
-    # st.plotly_chart(mat_claim_amt,
-    #                 use_container_width=True)

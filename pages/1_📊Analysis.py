@@ -162,4 +162,3 @@ if st.session_state['stage'] >= 2:
                     show_parental_claims(parental_claims, claims_df)
 else:
     st.warning('Upload file and submit mapping to see visualisations here.')
-# set_stage(0)

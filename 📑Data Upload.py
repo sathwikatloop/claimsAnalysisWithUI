@@ -94,7 +94,7 @@ def input_mapping(df, file_name):
                     df = standardise_data(df)
                     if df is not None and not df.empty:
                         save_file(df, file_name)
-                        True
+                        return True
             else:
                 st.warning(
                     "First upload the file above to get the inputs for columns to map"

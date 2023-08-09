@@ -1,6 +1,6 @@
 runtime: python
 env: flex
-entrypoint: streamlit run  "📑Data Upload.py" --server.port $PORT
+entrypoint: streamlit run  "📑DataUpload.py" --server.port $PORT
 
 runtime_config:
   operating_system: "ubuntu22"

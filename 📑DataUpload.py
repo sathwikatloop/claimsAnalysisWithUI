@@ -15,7 +15,8 @@ from src.utilities import (
     upload_data_set_state,
 )
 
-st.set_page_config(page_title="Data Upload", page_icon="📑")
+st.set_page_config(page_title="Data Upload",
+                   page_icon="📑")
 
 st.title("Automated Claims Analysis")
 st.sidebar.header("Data Upload")

@@ -43,6 +43,9 @@ if "uploaded_data" not in st.session_state:
 if "file_name" not in st.session_state:
     st.session_state["file_name"] = None
 
+if "column_mapping" not in st.session_state:
+    st.session_state["column_mapping"] = {}
+
 
 def initialize_stage():
     """
@@ -56,6 +59,7 @@ def initialize_stage():
     st.session_state["file_location"] = ""
     st.session_state["uploaded_data"] = pd.DataFrame()
     st.session_state["file_name"] = None
+    st.session_state["column_mapping"] = {}
     st.experimental_rerun()
 
 
@@ -78,22 +82,25 @@ def upload_claims_data():
 
 def input_mapping(df, file_name):
     """
-
     Args:
         df:
         file_name:
 
     Returns:
-
     """
     try:
         with st.expander("#### 2. Map corresponding relevant columns"):
             if not df.empty and file_name:
                 col_mapping = submit_mapping(df)
                 if col_mapping:
+                    print("Col_mapping returned from submit_mapping")
+                    st.session_state["column_mapping"] = col_mapping
+                    print("Col_mapping reset in session state")
                     df = rename_cols_using_map(df, col_mapping)
+                    print("Columns renamed", df, "using", col_mapping)
                     df = standardise_data(df)
                     if df is not None and not df.empty:
+                        # print(df)
                         save_file(df, file_name)
                         return True
             else:

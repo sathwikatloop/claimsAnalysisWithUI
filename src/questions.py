@@ -35,14 +35,12 @@ def get_maternity_claims(df):
 
 def get_parental_claims(df):
     """
-
     Args:
         df:
 
     Returns:
 
     """
-
     # Filter the DataFrame to include only claims from Parents
     return df.loc[df['Relation'] == 'Parent']
 

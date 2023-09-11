@@ -137,7 +137,7 @@ if st.session_state['stage'] >= 2:
                 with st.expander('##### Injury Claims'):
                     st.write('Claims with the ailment corresponding to an injury.')
                     show_basic_stats(injury_claims, claims_df)
-                    st.dataframe(injury_claims.sort_values(by='IncurredAmount', ascending=False))
+                    st.dataframeOh(injury_claims.sort_values(by='IncurredAmount', ascending=False))
 
             if not infectious_disease_claims.empty:
                 with st.expander('##### Infectious Disease Claims'):

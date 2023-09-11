@@ -18,6 +18,8 @@ from scipy.stats import norm
 import re
 import plotly.graph_objects as go
 
+from thefuzz import process
+
 """General Utility Functions"""
 
 numeric_columns = ['SumInsured',
@@ -85,51 +87,67 @@ def upload_file_form():
         tb.format_exc()
     return None, None
 
+def automated_mapping(df):
+    mappings = {}
+    compulsory_cols = compulsory_cols_to_be_mapped.keys()
+    for col_name in compulsory_cols:
+        matches = process.extract(col_name, df.columns, limit=5)
+        closest_match = matches[0][0]
+        if (closest_match in mappings.values()):
+            closest_match = matches[1][0]
+        mappings[col_name] = closest_match
+    return mappings
 
 def submit_mapping(df):
-    col_mapping = {}
+    col_mapping = automated_mapping(df)
+
+    print("Automated mapping", col_mapping)
     sorted_cols = sorted(df.columns.to_list())
-    with st.form("Submit Mapping"):
+    st.session_state.column_mapping = {}
+    print("Session state before form", st.session_state.column_mapping)
+
+    # temp_columns = {col_name: col_name for col_name in compulsory_cols_to_be_mapped.keys()}
+
+    temp_columns = {}
+
+    # print("Temp columns before form", temp_columns)
+
+    with st.form("Submit Mapping", clear_on_submit=False):
         st.subheader('Mandatory Columns')
-        for col_query, col_name in compulsory_cols_to_be_mapped.items():
+
+        # Create a list of columns to be mapped
+        # Use key of columns as variable names to store the selected column name
+
+        for col_query, col_name in col_mapping.items():
+            print("Col query : Col Name", col_query, ":", col_name)
+            default_index = sorted_cols.index(col_mapping.get(col_query, sorted_cols[0]))
             col_name_from_file = st.selectbox(label=f'{col_query}: ',
-                                              options=(*sorted_cols,))
-            col_mapping[col_name_from_file] = col_name
-        # st.subheader('Optional Extra Columns (if present)')
-        # for col_query, col_name in extra_cols_to_be_mapped.items():
-        #     col_present = st.checkbox(col_query)
-        #     if col_present:
-        #         col_name_from_file = st.selectbox(label=f'{col_query}: ', options=(*sorted_cols,))
-        #         col_mapping[col_name_from_file] = col_name
-        submitted = st.form_submit_button("Submit",
-                                          on_click=submit_mapping_set_state)
+                                              options=(*sorted_cols,),
+                                              index=default_index,
+                                              key=col_name,)
+            temp_columns[col_name_from_file] = col_query
+    
+        submitted = st.form_submit_button("Submit")
+
         if submitted:
+            print("Column Mapping after submission", temp_columns)
+            print("Submitted", submitted)
+            st.session_state.stage = 2
+            st.session_state.column_mapping = temp_columns
             st.success('Mapping has been submitted.')
 
-    col_mapping = {'Age': 'Age',
-                   'Ailment_code': 'AilmentICDCode',
-                   'Balance_Sum_Insured': 'BalanceSumInsured',
-                   'BenefSex': 'Sex',
-                   'City_Name': 'Location',
-                   'ClaimStatus': 'ClaimStatus',
-                   'Claim_Type': 'ClaimType',
-                   'Claimed_Amount': 'ClaimedAmount',
-                   'Date_of_Admission': 'DateOfAdmission',
-                   'Date_of_Discharge': 'DateOfDischarge',
-                   'Employee_Code': 'EmployeeCode',
-                   'Incurred_Amount': 'IncurredAmount',
-                   'Insurance_Company': 'Insurer',
-                   'Policy_End_Date': 'PolicyEndDate',
-                   'Policy_Start_Date': 'PolicyStartDate',
-                   'Procedure_Type_Surgical_Non_Surgical': 'ProcedureType',
-                   'Relation': 'Relation',
-                   'Sum_Insured': 'SumInsured',
-                   'Hospital_Name': 'Hospital'}
-    return col_mapping
+    return st.session_state.column_mapping
 
+def update_col_mapping(col_query):
+    print("on_change called")
+    def callback():
+        print("Callback called")
+    return callback
 
 def rename_cols_using_map(df, col_mapping):
-    if col_mapping is not None:
+    if st.session_state["column_mapping"] is not None:
+        print("columns are being renamed using", st.session_state["column_mapping"])
+        col_mapping = st.session_state["column_mapping"]
         df.rename(columns=col_mapping,
                   inplace=True)
         cols_to_drop = [col for col in df.columns if col not in col_mapping.values()]

@@ -116,6 +116,7 @@ if __name__ == "__main__":
         df, file_name = upload_claims_data()
         input_mapping(df, file_name)
     if st.session_state.stage == 2:
+        st.write(f"Renaming columns using this: {st.session_state['column_mapping']}")
         st.write(f"Name of File Uploaded: {st.session_state.file_name}")
         st.write(f"#### File Contents", st.session_state.uploaded_data)
         st.info(

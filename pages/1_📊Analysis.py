@@ -23,7 +23,10 @@ st.set_page_config(page_title="Visualisations",
                    layout="wide")
 st.sidebar.header("Visualisations")
 
-if st.session_state['stage'] >= 2:
+if "stage" not in st.session_state:
+    st.session_state.stage = 0
+
+if st.session_state.stage >= 2:
     if not st.session_state['data_uploaded'] or not st.session_state['mapping_submitted']:
         st.warning('Either data has not been uploaded or column mapping has not been submitted.')
     else:

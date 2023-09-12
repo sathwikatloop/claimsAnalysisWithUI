@@ -123,20 +123,12 @@ def submit_mapping(df):
             default_index = sorted_cols.index(col_mapping.get(col_query, sorted_cols[0]))
             col_name_from_file = st.selectbox(label=f'{col_query}: ',
                                               options=(*sorted_cols,),
-                                              index=default_index,
-                                              key=col_name,)
+                                              index=default_index,)
             temp_columns[col_name_from_file] = col_query
     
-        submitted = st.form_submit_button("Submit")
+        submitted = st.form_submit_button("Submit", on_click=submit_mapping_set_state(temp_columns))
 
-        if submitted:
-            print("Column Mapping after submission", temp_columns)
-            print("Submitted", submitted)
-            st.session_state.stage = 2
-            st.session_state.column_mapping = temp_columns
-            st.success('Mapping has been submitted.')
-
-    return st.session_state.column_mapping
+    return temp_columns
 
 def update_col_mapping(col_query):
     print("on_change called")
@@ -146,7 +138,6 @@ def update_col_mapping(col_query):
 
 def rename_cols_using_map(df, col_mapping):
     if st.session_state["column_mapping"] is not None:
-        print("columns are being renamed using", st.session_state["column_mapping"])
         col_mapping = st.session_state["column_mapping"]
         df.rename(columns=col_mapping,
                   inplace=True)
@@ -181,9 +172,11 @@ def upload_data_set_state():
     st.session_state['data_uploaded'] = True
 
 
-def submit_mapping_set_state():
+def submit_mapping_set_state(temp_columns):
     set_stage(2)
     st.session_state['mapping_submitted'] = True
+    st.session_state['column_mapping'] = temp_columns
+    print("Column Mapping set in session state", st.session_state['column_mapping'])
 
 
 def formatINR(number):
